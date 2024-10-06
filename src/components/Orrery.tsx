@@ -2,19 +2,19 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import PlanetDialog from "./PlanetDialog";
-import { BoxIcon } from "lucide-react";
+import { PauseCircleIcon, PlayCircleIcon } from "lucide-react";
+import PlanetCard from "./PlanetCard";
+
+enum CelestialBodyType {
+  Planet = "Planet",
+  NearEarthObject = "Near-Earth Object",
+}
 
 // Define types for celestial bodies
 export type CelestialBody = {
   name: string;
+  type: CelestialBodyType;
   color: string;
   orbitRadius: number;
   size: number;
@@ -32,6 +32,7 @@ type CelestialBodyWithPosition = CelestialBody & {
 const planets: CelestialBody[] = [
   {
     name: "Mercury",
+    type: CelestialBodyType.Planet,
     color: "#8c7e6a",
     orbitRadius: 50,
     size: 2,
@@ -42,6 +43,7 @@ const planets: CelestialBody[] = [
   },
   {
     name: "Venus",
+    type: CelestialBodyType.Planet,
     color: "#e6b88a",
     orbitRadius: 75,
     size: 3,
@@ -50,6 +52,7 @@ const planets: CelestialBody[] = [
   },
   {
     name: "Earth",
+    type: CelestialBodyType.Planet,
     color: "#6b93d6",
     orbitRadius: 100,
     size: 4,
@@ -58,6 +61,7 @@ const planets: CelestialBody[] = [
   },
   {
     name: "Mars",
+    type: CelestialBodyType.Planet,
     color: "#c1440e",
     orbitRadius: 125,
     size: 3,
@@ -67,9 +71,17 @@ const planets: CelestialBody[] = [
 ];
 
 const neos: CelestialBody[] = [
-  { name: "2020 QG", color: "#ffd700", orbitRadius: 90, size: 1, speed: 0.03 },
+  {
+    name: "2020 QG",
+    type: CelestialBodyType.NearEarthObject,
+    color: "#ffd700",
+    orbitRadius: 90,
+    size: 1,
+    speed: 0.03,
+  },
   {
     name: "99942 Apophis",
+    type: CelestialBodyType.NearEarthObject,
     color: "#ff4500",
     orbitRadius: 110,
     size: 1.5,
@@ -77,6 +89,7 @@ const neos: CelestialBody[] = [
   },
   {
     name: "2021 PH27",
+    type: CelestialBodyType.NearEarthObject,
     color: "#00ff00",
     orbitRadius: 140,
     size: 1,
@@ -255,11 +268,10 @@ export default function Orrery() {
       <div className="relative">
         <canvas
           ref={canvasRef}
-          // rectangle
-          width={1200}
+          // full screen width
+          width={window.innerWidth - 32}
           height={600}
-          className="border border-gray-600 bg-gray-900 rounded-lg mx-auto"
-          // vertically center this canvas
+          className="border border-gray-600 bg-gray-900 rounded-lg"
           onClick={handleCanvasClick}
           onMouseMove={handleCanvasMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -282,46 +294,22 @@ export default function Orrery() {
             {hoveredBody.name}
           </div>
         )}
-        <div className="absolute top-2 flex items-center space-x-2">
+        <div className="absolute top-2 left-2 flex items-center space-x-2">
           <Button onClick={handlePlayPause} variant="outline" size="sm">
+            {isPlaying ? (
+              <PauseCircleIcon size={16} className="mr-2" />
+            ) : (
+              <PlayCircleIcon size={16} className="mr-2" />
+            )}
             {isPlaying ? "Pause" : "Play"}
           </Button>
         </div>
       </div>
-      {selectedBody && (
-        <div className="mt-4 flex flex-col gap-1">
-          <h2 className="text-xl font-bold">
-            Selected Body: {selectedBody.name}
-          </h2>
-          <p>Orbit Radius: {selectedBody.orbitRadius} million km</p>
-          <p>Size: {selectedBody.size * 10} km</p>
-          <p>Speed: {selectedBody.speed * 1000} km/s</p>
-          <Button
-            onClick={() => setDialogOpen(true)}
-            size="sm"
-            className="self-start"
-          >
-            <BoxIcon size={16} className="mr-2" />
-            View in 3D
-          </Button>
-          <p>{selectedBody.description}</p>
-        </div>
+      {selectedBody ? (
+        <PlanetCard planet={selectedBody} onOpen={() => setDialogOpen(true)} />
+      ) : (
+        <div>No celestial body selected</div>
       )}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        {neos.map((neo) => (
-          <Card key={neo.name}>
-            <CardHeader>
-              <CardTitle>{neo.name}</CardTitle>
-              <CardDescription>Near-Earth Object</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Orbit Radius: {neo.orbitRadius} million km</p>
-              <p>Size: {neo.size * 10} km</p>
-              <p>Speed: {neo.speed * 1000} km/s</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
     </div>
   );
 }
