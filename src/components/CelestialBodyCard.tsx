@@ -52,8 +52,9 @@ const CelestialBodyCard: React.FC<CelestialBodyCardProps> = ({
           {isPlaying ? "Pause" : "Play"}
         </Button>
       </CardFooter>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
+          <h2 className="text-lg font-semibold">Details</h2>
           <p>Orbit Radius: {celestialBody.orbitRadius} million km</p>
           <p>Orbital Period: {celestialBody.orbitalPeriod} days</p>
           <p>Distance to Sun: {celestialBody.distanceToSun} million km</p>

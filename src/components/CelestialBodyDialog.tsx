@@ -34,7 +34,7 @@ const CelestialBodyDialog: React.FC<CelestialBodyDialogProps> = ({
           <DialogTitle>{celestialBody.name}</DialogTitle>
           <DialogDescription>{celestialBody.description}</DialogDescription>
         </DialogHeader>
-        {celestialBody.modelPath && (
+        {celestialBody.modelPath ? (
           <Canvas
             style={{ width: "100%", height: "500px" }}
             camera={{ position: [0, 0, 10], near: 0.1, far: 1000, fov: 50 }}
@@ -51,6 +51,8 @@ const CelestialBodyDialog: React.FC<CelestialBodyDialogProps> = ({
             </Suspense>
             <OrbitControls enableZoom={false} />
           </Canvas>
+        ) : (
+          <p>3D model not available</p>
         )}
         <DialogFooter>
           <Button type="button" onClick={onClose}>
