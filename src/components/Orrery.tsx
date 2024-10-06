@@ -8,6 +8,7 @@ import CelestialBodyCard from "./CelestialBodyCard";
 import { CelestialBodyWithPosition } from "@/types";
 import { neos, planets } from "@/lib/data";
 import NoSelectedCelestialBodyCard from "./NoSelectedCelestialBodyCard";
+import { useWidth } from "@/lib/hooks";
 
 const OrreryComponent: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,6 +17,7 @@ const OrreryComponent: React.FC = () => {
   const [selectedBody, setSelectedBody] =
     useState<CelestialBodyWithPosition | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const width = useWidth();
 
   // Track hovered celestial body and mouse position
   const [hoveredBody, setHoveredBody] =
@@ -26,8 +28,8 @@ const OrreryComponent: React.FC = () => {
   } | null>(null);
 
   // Scale factors
-  const planetSizeScaleFactor = 2;
-  const orbitRadiusScaleFactor = 1.5;
+  const planetSizeScaleFactor = width < 768 ? 1 : 2;
+  const orbitRadiusScaleFactor = width < 768 ? 1 : 1.5;
 
   // Time tracking
   const lastTimeRef = useRef(0); // in milliseconds
@@ -134,7 +136,7 @@ const OrreryComponent: React.FC = () => {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isPlaying, selectedBody]);
+  }, [isPlaying, orbitRadiusScaleFactor, planetSizeScaleFactor, selectedBody]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => !prev);
