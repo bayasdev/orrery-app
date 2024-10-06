@@ -1,7 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
-import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Bounds, Environment } from "@react-three/drei";
 import { Button } from "@/components/ui/button";
@@ -13,46 +12,45 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CelestialBody } from "./Orrery";
-import PlanetModel from "./PlanetModel";
+import ModelLoader from "./ModelLoader";
+import ModelSuspense from "./ModelSuspense";
+import { CelestialBody } from "@/types";
 
-interface PlanetDialogProps {
+interface CelestialBodyDialogProps {
   open: boolean;
-  planet: CelestialBody;
   onClose: () => void;
+  celestialBody: CelestialBody;
 }
 
-const PlanetDialogComponent: React.FC<PlanetDialogProps> = ({
-  planet,
+const CelestialBodyDialog: React.FC<CelestialBodyDialogProps> = ({
   open,
   onClose,
+  celestialBody,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{planet.name}</DialogTitle>
-          <DialogDescription>Planet: {planet.name}</DialogDescription>
+          <DialogTitle>{celestialBody.name}</DialogTitle>
+          <DialogDescription>{celestialBody.type}</DialogDescription>
         </DialogHeader>
-        {planet.modelPath && (
-          <div className="grid gap-4 py-4">
-            <Canvas
-              style={{ width: "100%", height: "500px" }}
-              camera={{ position: [0, 0, 10], near: 0.1, far: 1000, fov: 50 }}
-              gl={{ toneMappingExposure: 1.5 }}
-            >
-              <Environment preset="sunset" />
-              <ambientLight intensity={1} />
-              <directionalLight position={[10, 10, 10]} intensity={2} />
-              <pointLight position={[-10, -10, -10]} intensity={1} />
-              <Suspense fallback={null}>
-                <Bounds fit clip observe margin={1}>
-                  <PlanetModel modelPath={planet.modelPath} />
-                </Bounds>
-              </Suspense>
-              <OrbitControls enableZoom={true} />
-            </Canvas>
-          </div>
+        {celestialBody.modelPath && (
+          <Canvas
+            style={{ width: "100%", height: "500px" }}
+            camera={{ position: [0, 0, 10], near: 0.1, far: 1000, fov: 50 }}
+            gl={{ toneMappingExposure: 1.5 }}
+          >
+            <Environment preset="sunset" />
+            <ambientLight intensity={1} />
+            <directionalLight position={[10, 10, 10]} intensity={2} />
+            <pointLight position={[-10, -10, -10]} intensity={1} />
+            <Suspense fallback={<ModelSuspense />}>
+              <Bounds fit clip observe margin={1}>
+                <ModelLoader modelPath={celestialBody.modelPath} />
+              </Bounds>
+            </Suspense>
+            <OrbitControls enableZoom={false} />
+          </Canvas>
         )}
         <DialogFooter>
           <Button type="button" onClick={onClose}>
@@ -64,8 +62,4 @@ const PlanetDialogComponent: React.FC<PlanetDialogProps> = ({
   );
 };
 
-const PlanetDialog = dynamic(() => Promise.resolve(PlanetDialogComponent), {
-  ssr: false,
-});
-
-export default PlanetDialog;
+export default CelestialBodyDialog;

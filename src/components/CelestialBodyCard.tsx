@@ -1,7 +1,6 @@
 "use client";
 
 import { BoxIcon, PauseCircleIcon, Volume2Icon } from "lucide-react";
-import { CelestialBody } from "./Orrery";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -12,28 +11,32 @@ import {
   CardTitle,
 } from "./ui/card";
 import { useTts } from "tts-react";
+import { CelestialBody } from "@/types";
 
-interface PlanetCardProps {
-  planet: CelestialBody;
+interface CelestialBodyCardProps {
+  celestialBody: CelestialBody;
   onOpen: () => void;
 }
 
-const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
+const CelestialBodyCard: React.FC<CelestialBodyCardProps> = ({
+  celestialBody,
+  onOpen,
+}) => {
   const {
     ttsChildren,
     play,
     pause,
     state: { isPlaying },
   } = useTts({
-    children: planet.description,
+    children: celestialBody.description,
     markTextAsSpoken: true,
   });
 
   return (
-    <Card key={planet.name}>
+    <Card key={celestialBody.name}>
       <CardHeader>
-        <CardTitle>{planet.name}</CardTitle>
-        <CardDescription>{planet.type}</CardDescription>
+        <CardTitle>{celestialBody.name}</CardTitle>
+        <CardDescription>{celestialBody.type}</CardDescription>
       </CardHeader>
       <CardFooter className="flex gap-2">
         <Button onClick={onOpen} size="sm">
@@ -51,11 +54,11 @@ const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
       </CardFooter>
       <CardContent className="flex flex-col gap-2">
         <div>
-          <p>Orbit Radius: {planet.orbitRadius} million km</p>
-          <p>Size: {planet.size * 10} km</p>
-          <p>Speed: {planet.speed * 1000} km/s</p>
+          <p>Orbit Radius: {celestialBody.orbitRadius} million km</p>
+          <p>Orbital Period: {celestialBody.orbitalPeriod} days</p>
+          <p>Distance to Sun: {celestialBody.distanceToSun} million km</p>
         </div>
-        {planet.description && (
+        {celestialBody.description && (
           <div>
             <h2 className="text-lg font-semibold">Description</h2>
             <p>{ttsChildren}</p>
@@ -66,4 +69,4 @@ const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
   );
 };
 
-export default PlanetCard;
+export default CelestialBodyCard;
