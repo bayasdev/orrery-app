@@ -1,4 +1,6 @@
-import { BoxIcon, Volume2Icon } from "lucide-react";
+"use client";
+
+import { BoxIcon, PauseCircleIcon, Volume2Icon } from "lucide-react";
 import { CelestialBody } from "./Orrery";
 import { Button } from "./ui/button";
 import {
@@ -9,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { useTts } from "tts-react";
 
 interface PlanetCardProps {
   planet: CelestialBody;
@@ -16,6 +19,16 @@ interface PlanetCardProps {
 }
 
 const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
+  const {
+    ttsChildren,
+    play,
+    pause,
+    state: { isPlaying },
+  } = useTts({
+    children: planet.description,
+    markTextAsSpoken: true,
+  });
+
   return (
     <Card key={planet.name}>
       <CardHeader>
@@ -27,9 +40,13 @@ const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
           <BoxIcon size={16} className="mr-2" />
           View in 3D
         </Button>
-        <Button variant="outline" size="sm">
-          <Volume2Icon size={16} className="mr-2" />
-          Speak
+        <Button variant="outline" size="sm" onClick={isPlaying ? pause : play}>
+          {isPlaying ? (
+            <PauseCircleIcon size={16} className="mr-2" />
+          ) : (
+            <Volume2Icon size={16} className="mr-2" />
+          )}
+          {isPlaying ? "Pause" : "Play"}
         </Button>
       </CardFooter>
       <CardContent className="flex flex-col gap-2">
@@ -41,7 +58,7 @@ const PlanetCard: React.FC<PlanetCardProps> = ({ planet, onOpen }) => {
         {planet.description && (
           <div>
             <h2 className="text-lg font-semibold">Description</h2>
-            <p>{planet.description}</p>
+            <p>{ttsChildren}</p>
           </div>
         )}
       </CardContent>

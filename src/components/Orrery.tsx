@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import PlanetDialog from "./PlanetDialog";
 import { PauseCircleIcon, PlayCircleIcon } from "lucide-react";
 import PlanetCard from "./PlanetCard";
+import dynamic from "next/dynamic";
 
 enum CelestialBodyType {
   Planet = "Planet",
@@ -39,7 +40,7 @@ const planets: CelestialBody[] = [
     speed: 0.02,
     modelPath: "/models/mercury.glb",
     description:
-      "Es un planeta rocoso con una gran cantidad de cráteres en su superficie. A pesar de su proximidad al Sol, no es el planeta más caliente, ya que casi no tiene atmósfera que retenga el calor. Durante el día, sus temperaturas alcanzan los 430 °C, pero descienden bruscamente a -185 °C por la noche. La gravedad en Mercurio es de 3,7 m/s², lo que hace que los objetos pesen un 62% menos que en la Tierra. Además, gira a gran velocidad, tardando solo 88 días terrestres en completar una órbita alrededor del Sol. Curiosamente, durante este tiempo, Mercurio solo logra girar sobre su propio eje 1,5 veces. Carece de estaciones, ya que su eje de inclinación es apenas de 2º.",
+      "It is a rocky planet with a large number of craters on its surface. Despite its proximity to the Sun, it is not the hottest planet, as it has almost no atmosphere to retain heat. During the day, its temperatures reach 430 °C, but drop sharply to -185 °C at night. Gravity on Mercury is 3.7 m/s², which makes objects weigh 62% less than on Earth. In addition, it rotates at high speed, taking only 88 Earth days to complete one orbit around the Sun. Curiously, during this time, Mercury only manages to rotate on its own axis 1.5 times. It lacks seasons, since its tilt axis is only 2°.",
   },
   {
     name: "Venus",
@@ -97,7 +98,7 @@ const neos: CelestialBody[] = [
   },
 ];
 
-export default function Orrery() {
+const OrreryComponent: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const celestialBodiesRef = useRef<CelestialBodyWithPosition[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -312,4 +313,10 @@ export default function Orrery() {
       )}
     </div>
   );
-}
+};
+
+const Orrery = dynamic(() => Promise.resolve(OrreryComponent), {
+  ssr: false,
+});
+
+export default Orrery;
