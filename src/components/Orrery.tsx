@@ -2,11 +2,12 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import CelestialBodyDialog from "./PlanetDialog";
+import CelestialBodyDialog from "./CelestialBodyDialog";
 import { PauseCircleIcon, PlayCircleIcon } from "lucide-react";
 import CelestialBodyCard from "./CelestialBodyCard";
 import { CelestialBodyWithPosition } from "@/types";
 import { neos, planets } from "@/lib/data";
+import NoSelectedCelestialBodyCard from "./NoSelectedCelestialBodyCard";
 
 const OrreryComponent: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -253,7 +254,7 @@ const OrreryComponent: React.FC = () => {
           onOpen={() => setDialogOpen(true)}
         />
       ) : (
-        <div>No celestial body selected</div>
+        <NoSelectedCelestialBodyCard />
       )}
     </>
   );

@@ -33,7 +33,7 @@ const CelestialBodyCard: React.FC<CelestialBodyCardProps> = ({
   });
 
   return (
-    <Card key={celestialBody.name}>
+    <Card>
       <CardHeader>
         <CardTitle>{celestialBody.name}</CardTitle>
         <CardDescription>{celestialBody.type}</CardDescription>

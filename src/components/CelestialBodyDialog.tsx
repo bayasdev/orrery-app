@@ -32,7 +32,7 @@ const CelestialBodyDialog: React.FC<CelestialBodyDialogProps> = ({
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>{celestialBody.name}</DialogTitle>
-          <DialogDescription>{celestialBody.type}</DialogDescription>
+          <DialogDescription>{celestialBody.description}</DialogDescription>
         </DialogHeader>
         {celestialBody.modelPath && (
           <Canvas
