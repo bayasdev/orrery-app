@@ -57,6 +57,7 @@ const CelestialBodyCard: React.FC<CelestialBodyCardProps> = ({
           <p>Orbit Radius: {celestialBody.orbitRadius} million km</p>
           <p>Orbital Period: {celestialBody.orbitalPeriod} days</p>
           <p>Distance to Sun: {celestialBody.distanceToSun} million km</p>
+          <p>Moons: {celestialBody.moons}</p>
         </div>
         {celestialBody.description && (
           <div>
