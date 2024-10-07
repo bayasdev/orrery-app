@@ -30,6 +30,7 @@ const CelestialBodyCard: React.FC<CelestialBodyCardProps> = ({
   } = useTts({
     children: celestialBody.description,
     markTextAsSpoken: true,
+    lang: "en-US",
   });
 
   return (
